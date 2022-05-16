@@ -57,9 +57,6 @@
     <ClCompile Include="Common\CBGStars.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="Common\CCQuad.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Common\CQuad.h">
@@ -90,9 +87,6 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="Common\CBGStars.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="Common\CCQuad.h">
       <Filter>Common</Filter>
     </ClInclude>
   </ItemGroup>

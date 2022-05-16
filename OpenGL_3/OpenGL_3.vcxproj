@@ -89,7 +89,6 @@
     <ClCompile Include="Common\CBGStars.cpp" />
     <ClCompile Include="Common\CBulletShoot.cpp" />
     <ClCompile Include="Common\CCamera.cpp" />
-    <ClCompile Include="Common\CCQuad.cpp" />
     <ClCompile Include="Common\CPlayer.cpp" />
     <ClCompile Include="Common\CShape.cpp" />
     <ClCompile Include="Common\common.cpp" />
@@ -105,7 +104,6 @@
     <ClInclude Include="Common\CBGStars.h" />
     <ClInclude Include="Common\CBulletShoot.h" />
     <ClInclude Include="Common\CCamera.h" />
-    <ClInclude Include="Common\CCQuad.h" />
     <ClInclude Include="Common\CPlayer.h" />
     <ClInclude Include="Common\CShape.h" />
     <ClInclude Include="Common\CQuad.h" />
