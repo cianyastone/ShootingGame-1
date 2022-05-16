@@ -12,12 +12,12 @@ CQuad::CQuad()
 	_pPoints  = new vec4[_iNumVtx];
 	_pNormals = new vec3[_iNumVtx];
 
-	_pPoints[0] = vec4( -0.5f, 0.0f,  0.5f, 1.0f);
-	_pPoints[1] = vec4(  0.5f, 0.0f,  0.5f, 1.0f);
-	_pPoints[2] = vec4(  0.5f, 0.0f, -0.5f, 1.0f);
-	_pPoints[3] = vec4( -0.5f, 0.0f,  0.5f, 1.0f);
-	_pPoints[4] = vec4(  0.5f, 0.0f, -0.5f, 1.0f);
-	_pPoints[5] = vec4( -0.5f, 0.0f, -0.5f, 1.0f);
+	_pPoints[0] = vec4( -0.2f, 0.2f,  0.0f, 1.0f);
+	_pPoints[1] = vec4(  0.2f, 0.2f,  0.0f, 1.0f);
+	_pPoints[2] = vec4(  0.2f, -0.2f, 0.0f, 1.0f);
+	_pPoints[3] = vec4( -0.2f, 0.2f,  0.0f, 1.0f);
+	_pPoints[4] = vec4(  0.2f, -0.2f, 0.0f, 1.0f);
+	_pPoints[5] = vec4( -0.2f, -0.2f, 0.0f, 1.0f);
 
 	_pNormals[0] = vec3(  0, 1.0f, 0);  // Normal Vector ªº W ¬° 0
 	_pNormals[1] = vec3(  0, 1.0f, 0);

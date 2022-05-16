@@ -7,7 +7,7 @@
 typedef Angel::vec4  color4;
 typedef Angel::vec4  point4;
 
-#define QUAD_NUM 9		// 2 faces, 2 triangles/face 
+#define QUAD_NUM 6		// 2 faces, 2 triangles/face 
 
 class CQuad : public CShape
 { 
