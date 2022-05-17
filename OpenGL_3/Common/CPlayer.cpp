@@ -43,8 +43,13 @@ CPlayer::CPlayer()
 
 	bulletArray = new std::vector<CBulletShoot*>;
 
-
+	//CreateBulletList();
 	_AngleSpeed = 0;
+}
+
+CPlayer::~CPlayer()
+{
+	//DeleteBulletList();
 }
 
 void CPlayer::GL_SetTranslatMatrix(mat4& mat)
@@ -54,12 +59,9 @@ void CPlayer::GL_SetTranslatMatrix(mat4& mat)
 	_fPT[1] = _mxPT._m[1][3];
 }
 
-vec2 CPlayer::GL_getTranslatVector()
+mat4 CPlayer::GL_getTranslatMatrix()
 {
-	vec2 vT;
-	vT.x = _fPT[0];
-	vT.y = _fPT[1];
-	return vT;
+	return _mxPT;
 }
 
 float CPlayer::GetPlayerScale()
@@ -83,56 +85,11 @@ BoundingBox CPlayer::getBoundingBox()
 	return _boundingBox;
 }
 
-/*void CPlayer::drawBullet()
+mat4 CPlayer::GetTRSMatrix()
 {
-	_lBGet = _lBHead;
-	while (_lBGet != nullptr) {
-		_lBGet->drawbullet();
-		_lBGet = _lBGet->List;
-	}
+	return(_mxPT);
 }
 
-void CPlayer::setBullet()
-{
-	
-}
-
-void CPlayer::SetBulletPassiveMove(mat4& mat)
-{
-	_lBGet = _lBHead;	//子彈串列
-	while (_lBGet != nullptr) {
-		if (_lBGet->_bisShoot == false) { //子彈尚未射出
-			_lBGet->setTRSMatrix(mat);
-		}
-		_lBGet = _lBGet->List;
-	}
-}
-
-
-void CPlayer::ShootBullet(float delta, float passive_x)
-{
-	_lBGet_shoot = _lBHead_shoot;
-	//_lBGet_shoot->shootBullet(delta, passive_x);
-	_mxBT = _lBGet_shoot->GetTRSMatrix();	//更新子彈位置
-	_lBGet_shoot->_bisShoot = true;		//子彈射出
-}
-
-void CPlayer::NextBullet(float g_fPTx)
-{
-	_iBulletAmount--; //子彈數量紀錄
-	_lBHead_shoot = _lBHead_shoot->List;
-	_lBGet_shoot->_bisShoot = false;
-
-	if (_iBulletAmount == 0) {	//沒有子彈
-		_lBHead_shoot = _lBHead;
-		_lBGet_shoot = _lBHead_shoot;
-		while (_lBGet_shoot != nullptr) {
-			_lBGet_shoot->ResetBullet(g_fPTx); //子彈歸位
-			_lBGet_shoot = _lBGet_shoot->List;
-			_iBulletAmount++; //子彈數量紀錄
-		}
-	}
-}*/
 void CPlayer::UpdateMatrix(float delta)
 {
 	mat4 mxMa[QUAD_NUM];
@@ -152,6 +109,11 @@ void CPlayer::GL_draw()
 		spriteIterator != bulletArray->end(); spriteIterator++) {
 		(*spriteIterator)->GL_draw();
 	}
+	//_pBGet = _pBHead;
+	//while (_pBGet != nullptr) {
+	//	_pBGet->GL_draw();
+	//	_pBGet = _pBGet->link;
+	//}
 }
 
 void CPlayer::ShootBullet(float delta, float passive_x, int bullet_time)
@@ -167,11 +129,94 @@ void CPlayer::ShootBullet(float delta, float passive_x, int bullet_time)
 	for (std::vector<CBulletShoot*>::iterator spriteIterator = bulletArray->begin();
 	spriteIterator != bulletArray->end(); spriteIterator++) {
 		(*spriteIterator)->shootBullet(delta, passive_x);
-		_mxBT = (*spriteIterator)->GetTRSMatrix();
+		_mxBT = (*spriteIterator)->GetTranslateMatrix();
 	}
 
+	std::vector<std::vector<CBulletShoot*>::iterator> deleteArray;
+	for (std::vector<CBulletShoot*>::iterator spriteIterator = bulletArray->begin();
+		spriteIterator != bulletArray->end(); spriteIterator++)
+	{
+		if ((*spriteIterator)->GetBulletPosition() > 7.0f)
+		{
+			deleteArray.push_back(spriteIterator);
+		}
+	}
 
+	for (std::vector<std::vector<CBulletShoot*>::iterator>::iterator deleteIterator = deleteArray.begin();
+		deleteIterator != deleteArray.end(); deleteIterator++)
+	{
+		bulletArray->erase(*deleteIterator);
+	}
 }
+//
+//void CPlayer::CreateBulletList()	//建立子彈串列
+//{
+//	//first node
+//	_pBHead = new CBulletShoot;
+//	_pBHead->link = nullptr;
+//	_pBTail = _pBHead;
+//	_pBHead_shoot = _pBHead;	//子彈發射用
+//	_iBulletAmount++;				//子彈數量紀錄
+//
+//	//the rest of nodes
+//	for (int i = 0; i < BULLET_NUM - 1; i++) {
+//		if ((_pBGet = new CBulletShoot) == NULL) {
+//			printf("記憶體不足\n"); exit(0);
+//		}
+//		_pBGet->link = nullptr;
+//		_pBTail->link = _pBGet;
+//		_pBTail = _pBGet;
+//		_iBulletAmount++;	//子彈數量紀錄
+//	}
+//}
+//
+//void CPlayer::DeleteBulletList()	//刪除子彈串列
+//{
+//	_pBGet = _pBHead;
+//	while (_pBHead != nullptr) {
+//		_pBHead = _pBHead->link;
+//		delete _pBGet;
+//		_pBGet = _pBHead;
+//	}
+//	_iBulletAmount = 0;	//子彈數量歸零
+//}
+//
+//void CPlayer::SetBulletPassiveMove(mat4& mat)
+//{
+//	_pBGet = _pBHead;	//子彈串列
+//	while (_pBGet != nullptr) {
+//		if (_pBGet->_bisShoot == false) { //子彈尚未射出
+//			_pBGet->GL_SetTRSMatrix(mat);
+//		}
+//		_pBGet = _pBGet->link;
+//	}
+//}
+//
+//void CPlayer::ShootBullet(float delta, float passive_x)
+//{
+//	_pBGet_shoot = _pBHead_shoot;
+//	_pBGet_shoot->shootBullet(delta, passive_x);
+//	_mxBT = _pBGet_shoot->GetTranslateMatrix();	//更新子彈位置
+//	_pBGet_shoot->_bisShoot = true;		//子彈射出
+//}
+//
+//void CPlayer::NextBullet(float g_fPTx)
+//{
+//	_iBulletAmount--; //子彈數量紀錄
+//	_pBHead_shoot = _pBHead_shoot->link;
+//	_pBGet_shoot->_bisShoot = false;
+//
+//	if (_iBulletAmount == 0) {	//沒有子彈
+//		_pBHead_shoot = _pBHead;
+//		_pBGet_shoot = _pBHead_shoot;
+//		while (_pBGet_shoot != nullptr) {
+//			_pBGet_shoot->ResetBullet(g_fPTx); //子彈歸位
+//			_pBGet_shoot = _pBGet_shoot->link;
+//			_iBulletAmount++; //子彈數量紀錄
+//		}
+//	}
+//}
+
 
 void CPlayer::draw()
 {
@@ -184,3 +229,5 @@ void CPlayer::drawW()
 	drawingWithoutSetShader();
 	glDrawArrays(GL_TRIANGLES, 0, QUAD_NUM);
 }
+
+

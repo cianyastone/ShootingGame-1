@@ -73,7 +73,6 @@ CPlayer* g_pPlayer;				// 玩家
 CBulletShoot* g_pBullet;				// 子彈
 BoundingBox _boundingBox;
 float  g_fRQuadT[3] = { 0 };
-std::vector<C2DSprite *>* bulletArray;
 
 mat4  mxRT;
 mat4  mxBT;
@@ -82,6 +81,8 @@ mat4  mxRR;
 vec2 vB;
 
 float PlayerScale;
+
+bool g_bStoringAttack;
 
 // For Rotation
 GLfloat g_fYAngle = 0;  // Z軸的旋轉角度
@@ -102,7 +103,7 @@ mat4 g_mxPT;		//玩家座標(g_fPTx, PLAYER_Y_AXIS, 0, 1)
 mat4 g_mxPS;		//戰鬥機大小
 
 float g_fcount = 0;
-int _playerBulletTime = 1000;
+int _playerBulletTime = 400;
 
 //----------------------------------------------------------------------------
 // 函式的原型宣告
@@ -131,6 +132,8 @@ void init(void)
 	g_pPlayer->setBoundingBox(makeBoundingBox(0, 0, -5, 5));
 	_boundingBox = g_pPlayer->getBoundingBox();
 
+	g_bStoringAttack = false;
+
 }
 
 //----------------------------------------------------------------------------
@@ -150,7 +153,7 @@ void onFrameMove(float delta)
 	mat4 mvx, mpx;	// view matrix & projection matrix
 	bool bVDirty, bPDirty;	// view 與 projection matrix 是否需要更新給物件
 	auto camera = CCamera::getInstance();
-
+	g_fcount += delta;
 	g_pPlayer->ShootBullet(delta, g_fPTx, _playerBulletTime);
 	g_pStars->UpdateMatrix(delta);
 	g_pPlayer->UpdateMatrix(delta);
@@ -224,7 +227,20 @@ void Win_MouseMotion(int x, int y) {
 
 void Win_Keyboard(unsigned char key, int x, int y)
 {
+	vec4 vColor;
 	switch (key) {
+	case 'c':
+		vColor.x = 0.0f; vColor.y = 0.5098f; vColor.z = 0.1022; vColor.w = 1.0f;
+		g_pPlayer->setColor(vColor);
+		break;
+	case 'x':
+		vColor.x = 0.5098f; vColor.y = 0.0f; vColor.z = 0.1022; vColor.w = 1.0f;
+		g_pPlayer->setColor(vColor);
+		break;
+	case 'z':
+		vColor.x = 0.2745f; vColor.y = 0.5098f; vColor.z = 0.70588f; vColor.w = 1.0f;
+		g_pPlayer->setColor(vColor);
+		break;
 	case 033:
 		if (g_pPlayer != nullptr) delete g_pPlayer;		//玩家
 		exit(EXIT_SUCCESS);
